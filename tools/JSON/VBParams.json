@@ -4,9 +4,9 @@
 	"ЗакрытьTestClientПослеЗапускаСценариев": "Истина",
 	"КаталогПроекта": "$workspaceRoot",
 	"ВыгружатьСтатусВыполненияСценариевВФайл": "Истина",
-    "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев": "$workspaceRoot/./build/BuildStatus.log",
+    "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев": "$workspaceRoot/build/BuildStatus.log",
     "ДелатьЛогВыполненияСценариевВТекстовыйФайл": "Истина",
-	"ИмяФайлаЛогВыполненияСценариев": "$workspaceRoot/./build/log.txt",
+	"ИмяФайлаЛогВыполненияСценариев": "$workspaceRoot/build/log.txt",
 	"ИмяСборки": "Сценарные",
 	"Version": "1.2.031",
 	"Lang": "ru",
@@ -51,7 +51,7 @@
 	},
 	"ДелатьОтчетВФорматеАллюр": true,
 	"ОтчетAllure": {
-		"КаталогВыгрузкиAllure": "$workspaceRoot/./out/allure",
+		"КаталогВыгрузкиAllure": "$workspaceRoot/build/vanessa/allure",
 		"КаталогВыгрузкиAllureБазовый": "",
 		"УровеньОтчета1": "",
 		"УровеньОтчета2": "",
@@ -65,19 +65,16 @@
 		"КаталогОтносительноКоторогоНадоСтроитьИерархию": "",
 		"ДанныеАллюрМеток": []
 	},
-	"ДелатьОтчетВФорматеjUnit": false,
-	"ДелатьОтчетВФорматеCucumberJson": false,
-	"ДелатьОтчетВФорматеСППР": true,
-	"ОтчетСППР": {
-		"КаталогВыгрузкиСППР": "$workspaceRoot/./out/SPPR"
+	"ДелатьОтчетВФорматеjUnit": true,
+	"СкриншотыjUnit": false,
+	"ОтчетJUnit": {
+		"КаталогВыгрузкиJUnit": "$workspaceRoot/build/vanessa/junit"
 	},
+	"ДелатьОтчетВФорматеCucumberJson": false,
+	"ДелатьОтчетВФорматеСППР": false,
 	"СоздаватьИнструкциюHTML": false,
 	"СоздаватьИнструкциюMarkdown": false,
 	"ДелатьОтчетВоВнутреннемФормате": false,
-	"КаталогиБиблиотек": [
-		"$workspaceRoot/features",
-		"$instrumentsRoot/features/libraries"
-	],
 	"СписокТеговИсключение": [
 		"IgnoreOnCIMainBuild",
 		"ExportScenarios",

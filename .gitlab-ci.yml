@@ -1,44 +1,44 @@
 stages:
   - gitsync
-  - createBase
-  - syntax-check
-  - xunit
+  - Создание тестовой базы
+  - Синтаксический контроль
+  - Тесты
   - vanessa
-  - ACC
-  - Sonar
+  - АПК
+  - SonarQube
   - Allure
 
 gitsync:
   stage: gitsync
+  variables:
+    GITSYNC_V8VERSION: 8.3.18.1483
   only:
     - schedules
   tags:
     - OneS
   script:
-    - gitsync sync -u ci-bot -p 12345678 C:\Train_04_20\Develop\V8storage src\cf
-    - git push http://ci-bot:12345678@192.168.31.187/root/Train_04_20 HEAD:develop
-
+    - gitsync sync -u ci-bot -p 12345678 C:\DevOps\storage src\cf
+    - git push http://ci-bot:12345678@example.com/vsokolov/devops.git/ HEAD:develop
 
 Создание тестовой базы:
+  stage: Создание тестовой базы
   except:
     - schedules
-  stage: createBase
   only:
     refs:
       - develop
   tags:
     - OneS
   script:
-    - vrunner init-dev --dt C:\Train_04_20\Template\course.dt --db-user Администратор --src src/cf
-
+    - vrunner init-dev --dt C:\DevOps\course.dt --db-user Администратор --src src/cf
 
 Синтаксический контроль:
+  stage: Синтаксический контроль
   except:
     - schedules
-
-  stage: syntax-check
   variables:
     GIT_STRATEGY: none
+  allow_failure: true
   only:
     refs:
       - develop
@@ -49,15 +49,12 @@ gitsync:
   artifacts:
     reports:
       junit:
-        out/syntax-check/junit/junit.xml
-
-
+        build/syntax-check/junit/junit.xml
 
 Дымовые тесты:
+  stage: Тесты
   except:
     - schedules
-
-  stage: xunit
   variables:
     GIT_STRATEGY: none
   allow_failure: true
@@ -67,18 +64,36 @@ gitsync:
   tags:
     - OneS
   script:
-    - runner xunit
+    - vrunner xunit
   artifacts:
     reports:
       junit:
-        out/*.xml
+        build/smoke/junit/*.xml
 
+Модульные тесты:
+  stage: Тесты
+  except:
+    - schedules
+  variables:
+    GIT_STRATEGY: none
+  allow_failure: true
+  only:
+    refs:
+      - develop
+  tags:
+    - OneS
+  script:
+    - vrunner compileepf tests tests
+    - vrunner xunit --settings ./env-tests.json
+  artifacts:
+    reports:
+      junit:
+        build/tests/junit/*.xml
 
 vanessa:
+  stage: vanessa
   except:
     - schedules
-
-  stage: vanessa
   variables:
     GIT_STRATEGY: none
   allow_failure: true
@@ -88,15 +103,16 @@ vanessa:
   tags:
     - OneS
   script:
-    -  runner vanessa
-
-
+    - vrunner vanessa
+  artifacts:
+    reports:
+      junit:
+        build/vanessa/junit/*.xml
 
 АПК:
+  stage: АПК
   except:
     - schedules
-
-  stage: ACC
   variables:
     GIT_STRATEGY: none
   allow_failure: true
@@ -106,14 +122,12 @@ vanessa:
   tags:
     - OneS
   script:
-    -  runner run --ibconnection /FC:/Train_04_20/Template/ACC --db-user="" --db-pwd=""  --command "acc.catalog=$env:CI_PROJECT_DIR;acc.propertiesPaths=./tools/acc-export/acc.properties;" --execute "./tools/acc-export/acc-export.epf" --ordinaryapp=1
+    - vrunner run --ibconnection /FC:/DevOps/ACC --db-user="" --db-pwd=""  --command "acc.catalog=$env:CI_PROJECT_DIR;acc.propertiesPaths=./tools/acc-export/acc.properties;" --execute "./tools/acc-export/acc-export.epf" --ordinaryapp 1
 
-
-Sonar:
+SonarQube:
+  stage: SonarQube
   except:
     - schedules
-
-  stage: Sonar
   variables:
     GIT_STRATEGY: none
   allow_failure: true
@@ -123,14 +137,12 @@ Sonar:
   tags:
     - OneS
   script:
-    - C:\sonar-scanner\bin\sonar-scanner -D sonar.login=b398eb45331f9fc123b352b4cf96d320cfeef8cd -D sonar.projectVersion=$env:CI_BUILD_ID
-
+    - sonar-scanner -D sonar.login=80aeb2585cacfde187ada1e5a14acf3e8ae1d651 -D sonar.projectVersion=$env:CI_BUILD_ID
 
 Allure:
+  stage: Allure
   except:
     - schedules
-
-  stage: Allure
   variables:
     GIT_STRATEGY: none
   allow_failure: true
@@ -140,14 +152,10 @@ Allure:
   tags:
     - OneS
   script:
-    - allure generate out/syntax-check/allure out/allure/smoke out/allure -c -o out/allure-result
+    - allure generate build/syntax-check/allure build/smoke/allure build/vanessa/allure build/tests/allure -c -o build/allure-result
   artifacts:
     paths:
-      - out/allure-result
-
-
-
-
+      - build/allure-result
 
 # stages:
 #   - ping1
@@ -168,7 +176,7 @@ Allure:
 #   stage: ping2
 #   only:
 #     refs:
-#       - master
+#       - main
 #   tags:
 #     - OneS
 #   script:

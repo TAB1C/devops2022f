@@ -29,5 +29,5 @@
 		"БизнесПроцессы": false,
 		"Обработки": false
     },
-	"ИмяФайлаЛогВыполненияСценариев": "$workspaceRoot/out/log-xunit.txt"
+	"ИмяФайлаЛогВыполненияСценариев": "$workspaceRoot/build/log-xunit.txt"
 }
