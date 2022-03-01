@@ -1,0 +1,16 @@
+{
+    "$schema": "https://raw.githubusercontent.com/silverbulleters/vanessa-runner/develop/vanessa-runner-schema.json",
+    "default": {
+        "--ibconnection": "/F./build/ib",
+        "--db-user": "Администратор",
+        "--db-pwd": "",
+        "--v8version": "8.3.18",
+        "--additional": "/DisplayAllFunctions /Lru /iTaxi",
+        "--workspace": ".",
+        "--ordinaryapp": "-1"
+    },
+     "xunit": {
+        "testsPath": "tests",
+        "--reportsxunit": "ГенераторОтчетаJUnitXML{build/tests/junit/junit.xml};ГенераторОтчетаAllureXMLВерсия2{build/tests/allure/allure.xml}"
+    }
+}
